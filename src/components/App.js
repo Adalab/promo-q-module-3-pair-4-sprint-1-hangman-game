@@ -1,13 +1,26 @@
 import "../styles/App.scss";
-import {useState} from 'react'; 
+import { useState } from "react";
 
 function App() {
   const [numberOfErrors, setNumbersOfErrors] = useState(0);
   const handleClick = () => {
     setNumbersOfErrors(numberOfErrors + 1);
-    console.log(`dummy error-${numberOfErrors}`)
-  }
+    console.log(`dummy error-${numberOfErrors}`);
+  };
 
+  const [lastLetter, setLastLetter] = useState("");
+  const [alertMessage, setAlertMessage] = useState("");
+
+  const handelInputLetter = (ev) => {
+    const inputValue = ev.currentTarget.value;
+    const validatedLetter = /^[A-Za-z]+$/;
+    if (inputValue.match(validatedLetter) || !inputValue) {
+      setLastLetter(inputValue);
+      setAlertMessage("");
+    } else {
+      setAlertMessage(" Debes introducir una letra");
+    }
+  };
 
   return (
     <div className="page">
@@ -53,7 +66,9 @@ function App() {
               type="text"
               name="last-letter"
               id="last-letter"
+              onChange={handelInputLetter}
             />
+            <p>{alertMessage}</p>
           </form>
         </section>
         <section className={`dummy error-${numberOfErrors}`}>

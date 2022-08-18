@@ -1,22 +1,41 @@
 import "../styles/App.scss";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import getDataApi from "../services/api";
 
 function App() {
   //const [numberOfErrors, setNumbersOfErrors] = useState(0);
-  const [word, setWord] = useState('katcroker');
+  const [word, setWord] = useState("");
   const [userLetters, setUserLetters] = useState([]);
-  const wordLetters = word.split('');
+  const wordLetters = word.split("");
 
+  useEffect(() => {
+    getDataApi().then((response) => {
+      setWord(response.word);
+    });
+  }, []);
   const renderSolutionLetters = () => {
     //return wordLetters.map(letter => <li class="letter"></li>)
-    return wordLetters.map((letter, i) => userLetters.includes(letter) ?<li key={i} className="letter">{letter}</li> :<li className="letter" key={i}></li>)
-  }
+    return wordLetters.map((letter, i) =>
+      userLetters.includes(letter) ? (
+        <li key={i} className="letter">
+          {letter}
+        </li>
+      ) : (
+        <li className="letter" key={i}></li>
+      )
+    );
+  };
 
- const renderErrorLetters = () => {
-  const failLetters = userLetters.filter(letter => !wordLetters.includes(letter));
-  return failLetters.map((letter, i) => <li key={i} className="letter">{letter}</li>);
- }
-
+  const renderErrorLetters = () => {
+    const failLetters = userLetters.filter(
+      (letter) => !wordLetters.includes(letter)
+    );
+    return failLetters.map((letter, i) => (
+      <li key={i} className="letter">
+        {letter}
+      </li>
+    ));
+  };
 
   // const handleClick = () => {
   //   setNumbersOfErrors(numberOfErrors + 1);
@@ -63,7 +82,6 @@ function App() {
               {renderSolutionLetters()}
             </ul>
           </div>
-
 
           <div className="error">
             <h2 className="title">Letras falladas:</h2>
